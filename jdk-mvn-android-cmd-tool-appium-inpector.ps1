@@ -278,9 +278,14 @@ $appiumInstallerUrl = "https://github.com/appium/appium-inspector/releases/downl
 $appiumInstallerPath = "$env:TEMP\Appium-Inspector-2025.3.1-win.exe"
 # --------------------------------------------
 
-# ------------------ Download Appium Inspector ------------------
-Write-Host "⬇️ Downloading Appium Inspector..."
-Invoke-WebRequest -Uri $appiumInstallerUrl -OutFile $appiumInstallerPath
+# ------------------ Check if Appium Installer Exists ------------------
+if (-Not (Test-Path $appiumInstallerPath)) {
+    # ------------------ Download Appium Inspector ------------------
+    Write-Host "⬇️ Downloading Appium Inspector..."
+    Invoke-WebRequest -Uri $appiumInstallerUrl -OutFile $appiumInstallerPath
+} else {
+    Write-Host "📦 Using cached Appium Inspector installer: $appiumInstallerPath"
+}
 
 # ------------------ Install Appium Inspector Silently ------------------
 Write-Host "📥 Installing Appium Inspector silently..."
@@ -288,6 +293,10 @@ Start-Process -FilePath $appiumInstallerPath -ArgumentList "/S" -NoNewWindow -Wa
 
 # ------------------ Done ------------------
 Write-Host "`n🎉 Appium Inspector installation completed successfully!"
+
+# ------------------ Done ------------------
+Write-Host "`n🎉 Android SDK setup completed successfully!"
+Write-Host "👉 SDK location: $androidHome"
 
 
 # ------------------ Done ------------------
