@@ -175,6 +175,55 @@ catch {
     Write-Warning "Please restart your terminal or computer and try verification again."
 }
 
+
+# ------------------ Config ------------------
+$nodeInstallerUrl = "https://nodejs.org/dist/v20.19.0/node-v20.19.0-x64.msi"
+$nodeInstallerPath = "$env:TEMP\node-v20.19.0-x64.msi"
+$nodeInstallDir = "${env:ProgramFiles}\nodejs"
+$npmGlobalDir = "$env:APPDATA\npm"
+$appiumCacheDir = "$env:LOCALAPPDATA\appium-cache"
+
+# ------------------ Clean Up Old Versions ------------------
+Write-Host "🧹 Removing old Node.js & Appium..."
+Remove-Item -Recurse -Force "$nodeInstallDir" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$npmGlobalDir\appium*" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$appiumCacheDir" -ErrorAction SilentlyContinue
+
+# ------------------ Download Node.js ------------------
+Write-Host "⬇️ Downloading Node.js v20.19.0..."
+Invoke-WebRequest -Uri $nodeInstallerUrl -OutFile $nodeInstallerPath
+
+# ------------------ Install Node.js ------------------
+Write-Host "📦 Installing Node.js silently..."
+Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$nodeInstallerPath`" /qn" -Wait
+
+# ------------------ Add to PATH ------------------
+$nodePath = "${env:ProgramFiles}\nodejs"
+if (-not ($env:Path -like "*$nodePath*")) {
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$nodePath;$npmGlobalDir", [System.EnvironmentVariableTarget]::Machine)
+    $env:Path += ";$nodePath;$npmGlobalDir"
+    Write-Host "✅ Node.js path added to system PATH"
+}
+
+# ------------------ Install Appium & Appium Doctor ------------------
+Write-Host "📦 Installing Appium and Appium Doctor globally..."
+npm install -g appium appium-doctor
+
+# ------------------ Cache Appium Tools ------------------
+Write-Host "📁 Caching Appium tools..."
+New-Item -ItemType Directory -Force -Path $appiumCacheDir | Out-Null
+Copy-Item "$npmGlobalDir\appium*" -Destination $appiumCacheDir -Recurse -Force
+
+# ------------------ Verify Installation ------------------
+Write-Host "`n✅ Verifying versions..."
+node -v
+npm -v
+appium -v
+appium-doctor
+
+Write-Host "`n🎉 Setup completed successfully!"
+
+
 # ------------------ Config ------------------
 $androidHome = "C:\android_sdk"
 $toolsZipUrl = "https://dl.google.com/android/repository/commandlinetools-win-13114758_latest.zip"
