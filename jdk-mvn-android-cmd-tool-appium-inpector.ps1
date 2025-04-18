@@ -309,12 +309,23 @@ if (Test-Path $aapt2Path) {
     Write-Host " aapt2 not found"
 }
 
-Write-Host " Verifying Emulator..."
+# Check if the emulator exists in the expected path
+Write-Host "Verifying Emulator..."
 $emulator = Join-Path -Path $androidHome -ChildPath "emulator\emulator.exe"
+
+# Check if the emulator exists and list AVDs, or show an error message
 if (Test-Path $emulator) {
+    Write-Host "Emulator found!"
     & $emulator -list-avds
 } else {
-    Write-Host " emulator not found"
+    Write-Host "❌ Emulator not found"
+    # Add emulator path to the system PATH environment variable
+    $env:Path += ";$androidHome\emulator"
+    Write-Host " Emulator path added to session PATH."
+
+    # Permanently add emulator path to system PATH
+    [System.Environment]::SetEnvironmentVariable('Path', $env:Path, [System.EnvironmentVariableTarget]::Machine)
+    Write-Host " Emulator path added to system PATH permanently."
 }
 # ------------------ Done ------------------
 Write-Host " Android SDK setup completed successfully!"
