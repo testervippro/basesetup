@@ -253,6 +253,7 @@ Move-Item -Path "$tempExtractPath\cmdline-tools\*" -Destination $toolsFinalPath 
 Write-Host "Setting environment variables..."
 [System.Environment]::SetEnvironmentVariable("ANDROID_HOME", $androidHome, "Machine")
 [System.Environment]::SetEnvironmentVariable("ANDROID_USER_HOME", "$androidHome\.android", "Machine")
+[System.Environment]::SetEnvironmentVariable("ANDROID_AVD_HOME", "$androidHome\.android\avd", "Machine")
 
 # ------------------ Clean & Update System PATH ------------------
 Write-Host "Updating system PATH..."
@@ -308,6 +309,13 @@ if (Test-Path $aapt2Path) {
     Write-Host " aapt2 not found"
 }
 
+Write-Host " Verifying Emulator..."
+$emulator = Join-Path -Path $androidHome -ChildPath "C:\android_sdk\emulator\emulator.exe"
+if (Test-Path $aapt2Path) {
+    & $emulator -list-avds
+} else {
+    Write-Host " emulator not found"
+}
 # ------------------ Done ------------------
 Write-Host " Android SDK setup completed successfully!"
 Write-Host " SDK location: $androidHome"
