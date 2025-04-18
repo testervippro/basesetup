@@ -253,7 +253,6 @@ Move-Item -Path "$tempExtractPath\cmdline-tools\*" -Destination $toolsFinalPath 
 Write-Host "Setting environment variables..."
 [System.Environment]::SetEnvironmentVariable("ANDROID_HOME", $androidHome, "Machine")
 [System.Environment]::SetEnvironmentVariable("ANDROID_USER_HOME", "$androidHome\.android", "Machine")
-[System.Environment]::SetEnvironmentVariable("ANDROID_AVD_HOME", "$androidHome\.android\avd", "Machine")
 
 # ------------------ Clean & Update System PATH ------------------
 Write-Host "Updating system PATH..."
@@ -281,6 +280,15 @@ $updatedPath = ($filteredPath + $newPaths) -join ";"
 $env:ANDROID_HOME = $androidHome
 $env:ANDROID_USER_HOME = "$androidHome\.android"
 $env:Path = $updatedPath
+
+[System.Environment]::SetEnvironmentVariable("ANDROID_HOME", $androidHome, "Machine")
+[System.Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", $androidHome, "Machine")
+
+# Add tools to PATH
+$envPath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+$envPath += ";$androidHome\cmdline-tools\latest\bin;$androidHome\platform-tools;$androidHome\emulator"
+[System.Environment]::SetEnvironmentVariable("Path", $envPath, "Machine")
+
 
 # ------------------ Install Components ------------------
 Write-Host "Installing SDK components..."
