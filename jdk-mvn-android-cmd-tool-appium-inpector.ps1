@@ -184,17 +184,17 @@ $npmGlobalDir = "$env:APPDATA\npm"
 $appiumCacheDir = "$env:LOCALAPPDATA\appium-cache"
 
 # ------------------ Clean Up Old Versions ------------------
-Write-Host "🧹 Removing old Node.js & Appium..."
+Write-Host "Removing old Node.js & Appium..."
 Remove-Item -Recurse -Force "$nodeInstallDir" -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force "$npmGlobalDir\appium*" -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force "$appiumCacheDir" -ErrorAction SilentlyContinue
 
 # ------------------ Download Node.js ------------------
-Write-Host "⬇️ Downloading Node.js v20.19.0..."
+Write-Host "Downloading Node.js v20.19.0..."
 Invoke-WebRequest -Uri $nodeInstallerUrl -OutFile $nodeInstallerPath
 
 # ------------------ Install Node.js ------------------
-Write-Host "📦 Installing Node.js silently..."
+Write-Host "Installing Node.js silently..."
 Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$nodeInstallerPath`" /qn" -Wait
 
 # ------------------ Add to PATH ------------------
@@ -206,22 +206,22 @@ if (-not ($env:Path -like "*$nodePath*")) {
 }
 
 # ------------------ Install Appium & Appium Doctor ------------------
-Write-Host "📦 Installing Appium and Appium Doctor globally..."
+Write-Host " Installing Appium and Appium Doctor globally..."
 npm install -g appium appium-doctor
 
 # ------------------ Cache Appium Tools ------------------
-Write-Host "📁 Caching Appium tools..."
+Write-Host "Caching Appium tools..."
 New-Item -ItemType Directory -Force -Path $appiumCacheDir | Out-Null
 Copy-Item "$npmGlobalDir\appium*" -Destination $appiumCacheDir -Recurse -Force
 
 # ------------------ Verify Installation ------------------
-Write-Host "`n✅ Verifying versions..."
+Write-Host "Verifying versions..."
 node -v
 npm -v
 appium -v
 appium-doctor
 
-Write-Host "`n🎉 Setup completed successfully!"
+Write-Host "Setup completed successfully!"
 
 
 # ------------------ Config ------------------
@@ -235,7 +235,7 @@ $buildToolsVersion = "34.0.0"
 # --------------------------------------------
 
 # ------------------ Clean Environment ------------------
-Write-Host "🧹 Cleaning previous SDK setup..."
+Write-Host "Cleaning previous SDK setup..."
 if (Test-Path $androidHome) {
     Remove-Item -Recurse -Force $androidHome
 }
@@ -247,25 +247,25 @@ if (Test-Path $tempExtractPath) {
 
 # ------------------ Download Tools ------------------
 if (-Not (Test-Path $zipPath)) {
-    Write-Host "⬇️ Downloading Android command-line tools..."
+    Write-Host "Downloading Android command-line tools..."
     Invoke-WebRequest -Uri $toolsZipUrl -OutFile $zipPath
 } else {
-    Write-Host "📦 Using cached ZIP from: $zipPath"
+    Write-Host " Using cached ZIP from: $zipPath"
 }
 
 # ------------------ Extract Tools ------------------
-Write-Host "📦 Extracting tools..."
+Write-Host "Extracting tools..."
 Expand-Archive -Path $zipPath -DestinationPath $tempExtractPath -Force
 New-Item -ItemType Directory -Path $toolsFinalPath -Force | Out-Null
 Move-Item -Path "$tempExtractPath\cmdline-tools\*" -Destination $toolsFinalPath -Force
 
 # ------------------ Set Environment Variables ------------------
-Write-Host "⚙️ Setting environment variables..."
+Write-Host "Setting environment variables..."
 [System.Environment]::SetEnvironmentVariable("ANDROID_HOME", $androidHome, "Machine")
 [System.Environment]::SetEnvironmentVariable("ANDROID_USER_HOME", "$androidHome\.android", "Machine")
 
 # ------------------ Clean & Update System PATH ------------------
-Write-Host "🔄 Updating system PATH..."
+Write-Host "Updating system PATH..."
 
 # Get current system PATH
 $currentPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
@@ -292,16 +292,16 @@ $env:ANDROID_USER_HOME = "$androidHome\.android"
 $env:Path = $updatedPath
 
 # ------------------ Install Components ------------------
-Write-Host "📥 Installing SDK components..."
+Write-Host "Installing SDK components..."
 & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" `
     "platform-tools" "emulator" "build-tools;$buildToolsVersion"
 
 # ------------------ Accept Licenses (Manual) ------------------
-Write-Host "✅ Accepting licenses (manual input required)..."
+Write-Host "Accepting licenses (manual input required)..."
 & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" --licenses
 
 # ------------------ Verify adb ------------------
-Write-Host "`n🔍 Verifying adb..."
+Write-Host " Verifying adb..."
 $adbPath = Join-Path -Path $androidHome -ChildPath "platform-tools\adb.exe"
 if (Test-Path $adbPath) {
     & $adbPath version
@@ -310,17 +310,17 @@ if (Test-Path $adbPath) {
 }
 
 # ------------------ Verify aapt2 ------------------
-Write-Host "`n🔍 Verifying aapt2..."
+Write-Host " Verifying aapt2..."
 $aapt2Path = Join-Path -Path $androidHome -ChildPath "build-tools\$buildToolsVersion\aapt2.exe"
 if (Test-Path $aapt2Path) {
     & $aapt2Path version
 } else {
-    Write-Host "❌ aapt2 not found"
+    Write-Host " aapt2 not found"
 }
 
 # ------------------ Done ------------------
-Write-Host "`n🎉 Android SDK setup completed successfully!"
-Write-Host "👉 SDK location: $androidHome"
+Write-Host " Android SDK setup completed successfully!"
+Write-Host " SDK location: $androidHome"
 
 # ------------------ Config ------------------
 $appiumInstallerUrl = "https://github.com/appium/appium-inspector/releases/download/v2025.3.1/Appium-Inspector-2025.3.1-win.exe"
@@ -330,22 +330,22 @@ $appiumInstallerPath = "$env:TEMP\Appium-Inspector-2025.3.1-win.exe"
 # ------------------ Check if Appium Installer Exists ------------------
 if (-Not (Test-Path $appiumInstallerPath)) {
     # ------------------ Download Appium Inspector ------------------
-    Write-Host "⬇️ Downloading Appium Inspector..."
+    Write-Host "⬇ Downloading Appium Inspector..."
     Invoke-WebRequest -Uri $appiumInstallerUrl -OutFile $appiumInstallerPath
 } else {
-    Write-Host "📦 Using cached Appium Inspector installer: $appiumInstallerPath"
+    Write-Host " Using cached Appium Inspector installer: $appiumInstallerPath"
 }
 
 # ------------------ Install Appium Inspector Silently ------------------
-Write-Host "📥 Installing Appium Inspector silently..."
+Write-Host " Installing Appium Inspector silently..."
 Start-Process -FilePath $appiumInstallerPath -ArgumentList "/S" -NoNewWindow -Wait
 
 # ------------------ Done ------------------
-Write-Host "`n🎉 Appium Inspector installation completed successfully!"
+Write-Host " Appium Inspector installation completed successfully!"
 
 # ------------------ Done ------------------
-Write-Host "`n🎉 Android SDK setup completed successfully!"
-Write-Host "👉 SDK location: $androidHome"
+Write-Host " Android SDK setup completed successfully!"
+Write-Host "SDK location: $androidHome"
 
 
 # ------------------ Done ------------------
