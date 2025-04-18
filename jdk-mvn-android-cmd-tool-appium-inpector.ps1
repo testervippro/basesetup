@@ -202,7 +202,7 @@ $nodePath = "${env:ProgramFiles}\nodejs"
 if (-not ($env:Path -like "*$nodePath*")) {
     [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$nodePath;$npmGlobalDir", [System.EnvironmentVariableTarget]::Machine)
     $env:Path += ";$nodePath;$npmGlobalDir"
-    Write-Host "✅ Node.js path added to system PATH"
+    Write-Host " Node.js path added to system PATH"
 }
 
 # ------------------ Install Appium & Appium Doctor ------------------
@@ -306,7 +306,7 @@ $adbPath = Join-Path -Path $androidHome -ChildPath "platform-tools\adb.exe"
 if (Test-Path $adbPath) {
     & $adbPath version
 } else {
-    Write-Host "❌ adb not found"
+    Write-Host " adb not found"
 }
 
 # ------------------ Verify aapt2 ------------------
@@ -349,6 +349,6 @@ Write-Host "SDK location: $androidHome"
 
 
 # ------------------ Done ------------------
-Write-Host "`n🎉 Android SDK setup completed successfully!"
-Write-Host "👉 SDK location: $androidHome"
+Write-Host " Android SDK setup completed successfully!"
+Write-Host " SDK location: $androidHome"
 
