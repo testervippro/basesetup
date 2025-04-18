@@ -320,7 +320,7 @@ if (Test-Path $emulator) {
 } else {
     Write-Host "❌ Emulator not found"
     # Add emulator path to the system PATH environment variable
-    $env:Path += ";$androidHome\emulator"
+    $env:Path += ";$androidHome\emulator\emulator.exe"
     Write-Host " Emulator path added to session PATH."
 
     # Permanently add emulator path to system PATH
