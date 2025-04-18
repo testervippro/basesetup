@@ -1,13 +1,3 @@
-<#
-.SYNOPSIS
-    Installs JDK 17 and Maven 3.9.9 with proper environment variable configuration
-.DESCRIPTION
-    Downloads and installs Temurin JDK 17 and Apache Maven 3.9.9,
-    sets JAVA_HOME and MAVEN_HOME, and adds them to PATH.
-    Implements caching to avoid re-downloading if files exist.
-.NOTES
-    Requires PowerShell to be run as Administrator
-#>
 
 # Configuration
 $cacheDir = "$env:TEMP\java-maven-install-cache"
