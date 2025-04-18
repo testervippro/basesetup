@@ -310,7 +310,7 @@ if (Test-Path $aapt2Path) {
 }
 
 Write-Host " Verifying Emulator..."
-$emulator = Join-Path -Path $androidHome -ChildPath "C:\android_sdk\emulator\emulator.exe"
+$emulator = Join-Path -Path $androidHome -ChildPath "emulator\emulator.exe"
 if (Test-Path $aapt2Path) {
     & $emulator -list-avds
 } else {
